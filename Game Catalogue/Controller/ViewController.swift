@@ -10,27 +10,81 @@ import UIKit
 import os.log
 import Nuke
 
-private let page = "1"
+private var page = 1
+private let itemPerBatch = "10"
 private let helper: Helper! = Helper()
 private var gamesData: Games!
 private var gameData: [Game]!
+private var gameDataFiltered: [Game]!
 var loading = true
+var searching = false
+var textQuery = ""
 
-class ViewController: UIViewController, UITableViewDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var mainTableView: UITableView!
+    @IBOutlet weak var loadMoreDataView: UIView!
+    @IBOutlet weak var noMoreDataView: UIView!
+    @IBOutlet weak var footerView: UIView!
+    @IBOutlet weak var rightButtonNavbar: UIBarButtonItem!
+    let width = UIScreen.main.bounds.size.width - 100
+    lazy var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: width, height: 20))
+    
     var componentGames = URLComponents(string: "https://api.rawg.io/api/games")!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         gameData = [Game]()
+        gameDataFiltered = [Game]()
         
         mainTableView.dataSource = self
         mainTableView.delegate = self
         mainTableView.register(UINib(nibName: "MainTableViewCell", bundle: nil), forCellReuseIdentifier: "mainViewCell")
-        // Do any additional setup after loading the view.
+        
+        searchBar.placeholder = "Search Game Name"
+        let leftNavBarButton = UIBarButtonItem(customView:searchBar)
+        self.navigationItem.leftBarButtonItem = leftNavBarButton
+        searchBar.delegate = self
+        
+        fetchData()
+    }
+    
+
+    @IBAction func tryAgainButton(_ sender: Any) {
+        fetchData()
+    }
+    
+    private func showLoadMoreDataView(_ show: Bool) {
+        loadMoreDataView.isHidden = show ? false : true
+        noMoreDataView.isHidden = show ? true : false
+    }
+    
+    private func showLoadMoreDataView() {
+        showLoadMoreDataView(true)
+    }
+    
+    private func showNoMoreDataView() {
+        showLoadMoreDataView(false)
+    }
+    
+    // Handle show load more data view or no more data view when fetch data
+    private func fetchData() {
+        showLoadMoreDataView()
+        getDataGame { (newData) in
+            if (newData.count == 0) {
+                self.showNoMoreDataView()
+            }
+            else {
+                self.insertNewData(newData: newData)
+                page += 1
+            }
+        }
+    }
+    
+    private func getDataGame(fetched: @escaping (_ newData: [Game]) -> Void){
         componentGames.queryItems = [
-            URLQueryItem(name: "page_size", value: "10")
+            URLQueryItem(name: "page", value: String(page)),
+            URLQueryItem(name: "page_size", value: itemPerBatch)
         ]
         
         let request = URLRequest(url: componentGames.url!)
@@ -41,12 +95,9 @@ class ViewController: UIViewController, UITableViewDelegate {
                     gamesData = helper.decodeGamesJSON(data: data)
 //                    NSLog("Result" + String(decoding: data, as: UTF8.self))
 
-                    gameData = gamesData?.game
                     loading = false
                     
-                    DispatchQueue.main.async {
-                        self.mainTableView.reloadData()
-                    }
+                    fetched((gamesData?.game)!)
                 } else {
                     NSLog("Something When Wrong " + String(response.statusCode))
                 }
@@ -55,30 +106,52 @@ class ViewController: UIViewController, UITableViewDelegate {
         task.resume()
     }
     
-//    private func getDataGame(withID id: String){
-//        let componentGame = URLComponents(string: "https://api.rawg.io/api/games"+id)!
-//        let request = URLRequest(url: componentGame.url!)
-//
-//                let task = URLSession.shared.dataTask(with: request) { data, response, error in
-//                    guard let response = response as? HTTPURLResponse, let data = data else { return }
-//                        if (response.statusCode == 200) {
-//                            gamesData = helper.decodeGamesJSON(data: data)
-//        //                    NSLog("Result" + String(decoding: data, as: UTF8.self))
-//
-//                            let dateFormatter = DateFormatter()
-//                            dateFormatter.dateFormat = "yyyy-MM-dd"
-//                            gameData = gamesData?.game
-//
-//                            DispatchQueue.main.async {
-//                                self.mainTableView.reloadData()
-//                            }
-//                        } else {
-//                            NSLog("Something When Wrong " + String(response.statusCode))
-//                        }
-//                }
-//
-//                task.resume()
-//    }
+    private func getDataGameSearch(append: Bool){
+        let searchQuery = textQuery.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)
+            componentGames.queryItems = [
+                URLQueryItem(name: "search", value: searchQuery),
+                URLQueryItem(name: "page", value: String(page)),
+                URLQueryItem(name: "page_size", value: itemPerBatch)
+            ]
+            
+            let request = URLRequest(url: componentGames.url!)
+            
+            let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                guard let response = response as? HTTPURLResponse, let data = data else { return }
+                    if (response.statusCode == 200) {
+                        gamesData = helper.decodeGamesJSON(data: data)
+    //                    NSLog("Result" + String(decoding: data, as: UTF8.self))
+
+                        loading = false
+                        
+                        if(append){
+                            let new:[Game] =  gamesData?.game ?? [Game]()
+                            gameDataFiltered.append(contentsOf: new)
+                        }else{
+                            gameDataFiltered = gamesData?.game
+                        }
+                        
+                        DispatchQueue.main.async {
+                            self.mainTableView.reloadData()
+                        }
+                    } else {
+                        NSLog("Something When Wrong " + String(response.statusCode))
+                    }
+            }
+            
+            task.resume()
+        }
+    
+    // Insert new data into table view
+    private func insertNewData(newData: [Game]) {
+        if (newData.count > 0) {
+            gameData.append(contentsOf: newData)
+            gameDataFiltered = gameData
+            DispatchQueue.main.async {
+                self.mainTableView.reloadData()
+            }
+        }
+    }
 }
 
 extension ViewController: UITableViewDataSource{
@@ -86,7 +159,7 @@ extension ViewController: UITableViewDataSource{
         if(loading){
             return 1
         }else{
-            return gameData.count
+            return gameDataFiltered.count
         }
         
     }
@@ -97,22 +170,64 @@ extension ViewController: UITableViewDataSource{
         if(loading){
             cell.title.text = "Loading..."
         }else{
-            if(gameData?.isEmpty == false){
-                let detailGame = gamesData.game![indexPath.row]
+            if(gameDataFiltered?.isEmpty == false && indexPath.row < gameDataFiltered.count){
+//                print("=============TEST==============")
+//                print(gameDataFiltered)
+                let detailGame = gameDataFiltered![indexPath.row]
                 cell.date.text = detailGame.released
                 cell.title.text = detailGame.name
                 cell.rating.text = detailGame.rating
-//                cell.mainPicture.downloaded(from: detailGame.background ?? "https://media.rawg.io/media/games/b11/b115b2bc6a5957a917bc7601f4abdda2.jpg")
+                
+                cell.platform1.isHidden = true
+                cell.platform2.isHidden = true
+                cell.platform3.isHidden = true
                 
                 let screenWidth = UIScreen.main.bounds.size.width
-                let targetSize = CGSize(width: screenWidth, height: (screenWidth / 1.5))
+                let targetSize = CGSize(width: screenWidth, height: screenWidth)
                 
                 let request = ImageRequest(
-                    url: URL(string: detailGame.background ?? "")!,
+                    url: URL(string: detailGame.background ?? "https://i.ya-webdesign.com/images/placeholder-image-png-6.png")!,
                     processors: [
                         ImageProcessors.Resize(size: targetSize),
                     ]
                 )
+                
+                
+                var countTotalPlatform = 0, countPlatform = 0;
+                let parentPlatform:[ParentPlatform] = detailGame.parent_platforms ?? [ParentPlatform]()
+                
+                for platform in parentPlatform {
+                    let childPlatform = platform.platform
+                    let icon = helper.getIconPlatform(slug: childPlatform?.slug ?? "")
+
+                    if(icon != ""){
+                        let image = UIImage(named: icon)
+                        
+                        if(countPlatform == 0){
+                            cell.platform1.isHidden = false
+                            cell.platform1.image = image
+                            countPlatform += 1
+                        }else if(countPlatform == 1){
+                            cell.platform2.isHidden = false
+                            cell.platform2.image = image
+                            countPlatform += 1
+                        }else if(countPlatform == 2){
+                            cell.platform3.isHidden = false
+                            cell.platform3.image = image
+                            countPlatform += 1
+                        }
+                    }
+                    
+                    countTotalPlatform += 1
+                }
+                
+                if(countTotalPlatform > 3){
+                    cell.platformNumber.isHidden = false
+                    cell.platformNumber.text = "+ " + String((countTotalPlatform - 3))
+                }else{
+                    cell.platformNumber.isHidden = true
+                }
+                
                 
                 Nuke.loadImage(with: request, into: cell.mainPicture)
                 
@@ -125,9 +240,60 @@ extension ViewController: UITableViewDataSource{
         return cell
     }
     
-    // method to run when table view cell is tapped
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // note that indexPath.section is used rather than indexPath.row
-        print("You tapped cell number \(indexPath.section).")
+    // Call fetchData method when last row is about to be presented
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let lastSectionIndex = tableView.numberOfSections - 1
+        let lastRowIndex = tableView.numberOfRows(inSection: lastSectionIndex) - 1
+        if indexPath.section ==  lastSectionIndex && indexPath.row == lastRowIndex {
+            //print("last")
+            if(gameDataFiltered.count > 0){
+                if(searching){
+                    getDataGameSearch(append: true)
+                }else{
+                    fetchData()
+                }
+            }
+        }
+    }
+}
+
+extension ViewController: UITableViewDelegate{
+   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Memanggil View Controller dengan berkas NIB/XIB di dalamnya
+        let detail = DetailViewController(nibName: "DetailViewController", bundle: nil)
+        
+        // Mengirim data
+        detail.detailGame = gameDataFiltered[indexPath.row]
+        
+        // Push/mendorong view controller lain
+        self.navigationController?.pushViewController(detail, animated: true)
+    }
+}
+
+extension ViewController: UISearchBarDelegate{
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if(searchText.count > 0){
+            textQuery = searchText
+            if(!searching){
+                //First time search, use last data for better performance
+                gameDataFiltered = gameData.filter {
+                    $0.name!.contains(searchText)
+                }
+                
+                page = 1
+            }else{
+                getDataGameSearch(append: false)
+            }
+            searching = true
+        }else{
+            searching = false
+            gameDataFiltered = gameData
+            
+            page = 1
+        }
+        
+        DispatchQueue.main.async {
+            self.mainTableView.reloadData()
+        }
     }
 }

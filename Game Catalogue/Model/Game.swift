@@ -15,6 +15,9 @@ public struct Game: Codable {
     let tba: Bool?
     let background: String?
     let rating: String?
+    let parent_platforms: [ParentPlatform]?
+    let clip: Clip?
+    let short_screenshots: [ShortScreenshot]?
     
     public enum CodingKeys: String, CodingKey {
         case id
@@ -24,6 +27,9 @@ public struct Game: Codable {
         case tba
         case background = "background_image"
         case rating
+        case parent_platforms
+        case clip
+        case short_screenshots
     }
     
     public init(from decoder: Decoder) throws {
@@ -54,5 +60,11 @@ public struct Game: Codable {
         rating = String(format:"%.2f", ratingDouble!) + "/5.00"
         
         released = date
+        
+        parent_platforms = try container.decodeIfPresent([ParentPlatform].self, forKey: .parent_platforms)
+        
+        clip = try container.decodeIfPresent(Clip.self, forKey: .clip)
+        
+        short_screenshots = try container.decodeIfPresent([ShortScreenshot].self, forKey: .short_screenshots)
     }
 }

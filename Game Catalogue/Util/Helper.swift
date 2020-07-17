@@ -22,6 +22,29 @@ public class Helper{
         return game
     }
     
+    public func getIconPlatform(slug:String) -> String{
+        switch slug {
+        case "pc":
+            return "windows"
+        case "playstation":
+            return "ps"
+        case "xbox":
+            return "xbox"
+        case "linux":
+            return "linux"
+        case "mac":
+            return "apple"
+        case "nintendo-switch":
+            return "nintendo"
+        case "android":
+            return "android"
+        case "ios":
+            return "ios"
+        default:
+            return ""
+        }
+    }
+    
     func hexStringToUIColor (hex:String) -> UIColor {
         var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 

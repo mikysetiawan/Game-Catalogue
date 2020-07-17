@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="imageDetail" id="gTV-IL-0wX" customClass="ImageDetailItemCell" customModule="Game_Catalogue" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MPx-ZD-Kwh">
+                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="MPx-ZD-Kwh" secondAttribute="bottom" id="HRJ-6e-iHw"/>
+                <constraint firstItem="MPx-ZD-Kwh" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Lcd-6c-nqD"/>
+                <constraint firstAttribute="trailing" secondItem="MPx-ZD-Kwh" secondAttribute="trailing" id="X2F-4a-KCu"/>
+                <constraint firstItem="MPx-ZD-Kwh" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="qnR-4i-4p5"/>
+            </constraints>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <connections>
+                <outlet property="imageDetail" destination="MPx-ZD-Kwh" id="Uiv-3o-FJ6"/>
+            </connections>
+            <point key="canvasLocation" x="140.57971014492756" y="85.714285714285708"/>
+        </collectionViewCell>
+    </objects>
+</document>
