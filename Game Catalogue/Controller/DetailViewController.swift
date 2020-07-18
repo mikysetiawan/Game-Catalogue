@@ -16,16 +16,22 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
     var detailGame: GameModel?
     var clip: Clip?
     var screenShot: [ShortScreenshot]?
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var titleGame: UILabel!
     @IBOutlet weak var releasedDate: UILabel!
     @IBOutlet weak var ratingGame: UILabel!
+    @IBOutlet weak var descriptionGame: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
     
     let inset: CGFloat = 5
     let minimumLineSpacing: CGFloat = 5
     let minimumInteritemSpacing: CGFloat = 5
     let cellsPerRow = 3
+    
+    override func viewDidLayoutSubviews(){
+        scrollView.contentSize = CGSize(width: 2000, height: 5000);
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,11 +41,11 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         collectionView.delegate = self
         collectionView.dataSource = self
-
+        
         // Digunakan untuk menetapkan nilai ke beberapa view yang ada
         if let result = detailGame{
             detailGame = result
-            print(result.description)
+            //print(result.description)
             let screenWidth = UIScreen.main.bounds.size.width
             let targetSize = CGSize(width: screenWidth, height: screenWidth)
             
@@ -60,6 +66,7 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
             Nuke.loadImage(with: request, options: options, into: backgroundImage)
             
             titleGame.text = result.name
+            descriptionGame.attributedText = NSAttributedString(html: result.description ?? "")
             let release = result.released ?? "TBO"
             releasedDate.text = "Released date: "+release
             ratingGame.text = result.rating
