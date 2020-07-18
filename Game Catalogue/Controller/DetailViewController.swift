@@ -13,7 +13,7 @@ import AVFoundation
 
 class DetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
-    var detailGame: Game?
+    var detailGame: GameModel?
     var clip: Clip?
     var screenShot: [ShortScreenshot]?
     @IBOutlet weak var backgroundImage: UIImageView!
@@ -39,6 +39,7 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
         // Digunakan untuk menetapkan nilai ke beberapa view yang ada
         if let result = detailGame{
             detailGame = result
+            print(result.description)
             let screenWidth = UIScreen.main.bounds.size.width
             let targetSize = CGSize(width: screenWidth, height: screenWidth)
             
@@ -52,7 +53,11 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
                 ]
             )
             
-            Nuke.loadImage(with: request, into: backgroundImage)
+            let options = ImageLoadingOptions(
+                placeholder: UIImage(named: "placeholder-dark"),
+                transition: .fadeIn(duration: 0.33)
+            )
+            Nuke.loadImage(with: request, options: options, into: backgroundImage)
             
             titleGame.text = result.name
             let release = result.released ?? "TBO"
@@ -84,7 +89,11 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
                 ]
             )
             
-            Nuke.loadImage(with: request, into: cell.imageDetail)
+            let options = ImageLoadingOptions(
+                placeholder: UIImage(named: "placeholder"),
+                transition: .fadeIn(duration: 0.33)
+            )
+            Nuke.loadImage(with: request, options: options, into: cell.imageDetail)
             return cell
         }
         
@@ -99,8 +108,11 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
                     ImageProcessors.Resize(size: targetSize)
                 ]
             )
-            
-            Nuke.loadImage(with: request, into: cell.imageDetail)
+            let options = ImageLoadingOptions(
+                placeholder: UIImage(named: "placeholder"),
+                transition: .fadeIn(duration: 0.33)
+            )
+            Nuke.loadImage(with: request, options: options, into: cell.imageDetail)
         }
 
         return cell

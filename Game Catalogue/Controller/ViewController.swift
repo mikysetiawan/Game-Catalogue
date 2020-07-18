@@ -14,8 +14,8 @@ private var page = 1
 private let itemPerBatch = "10"
 private let helper: Helper! = Helper()
 private var gamesData: Games!
-private var gameData: [Game]!
-private var gameDataFiltered: [Game]!
+private var gameData: [GameModel]!
+private var gameDataFiltered: [GameModel]!
 var loading = true
 var searching = false
 var textQuery = ""
@@ -34,8 +34,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        gameData = [Game]()
-        gameDataFiltered = [Game]()
+        gameData = [GameModel]()
+        gameDataFiltered = [GameModel]()
         
         mainTableView.dataSource = self
         mainTableView.delegate = self
@@ -81,7 +81,7 @@ class ViewController: UIViewController {
         }
     }
     
-    private func getDataGame(fetched: @escaping (_ newData: [Game]) -> Void){
+    private func getDataGame(fetched: @escaping (_ newData: [GameModel]) -> Void){
         componentGames.queryItems = [
             URLQueryItem(name: "page", value: String(page)),
             URLQueryItem(name: "page_size", value: itemPerBatch)
@@ -97,7 +97,15 @@ class ViewController: UIViewController {
 
                     loading = false
                     
-                    fetched((gamesData?.game)!)
+                    var gameFetched: [GameModel] = []
+                    let new:[Game] =  gamesData?.game ?? [Game]()
+                    new.forEach { (result) in
+                        let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip!, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
+                        
+                        gameFetched.append(newData)
+                    }
+                    
+                    fetched(gameFetched)
                 } else {
                     NSLog("Something When Wrong " + String(response.statusCode))
                 }
@@ -124,11 +132,15 @@ class ViewController: UIViewController {
 
                         loading = false
                         
-                        if(append){
-                            let new:[Game] =  gamesData?.game ?? [Game]()
-                            gameDataFiltered.append(contentsOf: new)
-                        }else{
-                            gameDataFiltered = gamesData?.game
+                        if(!append){
+                            gameDataFiltered = []
+                        }
+                        
+                        let new:[Game] =  gamesData?.game ?? [Game]()
+                        new.forEach { (result) in
+                            let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip!, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
+                            
+                            gameDataFiltered.append(newData)
                         }
                         
                         DispatchQueue.main.async {
@@ -142,8 +154,27 @@ class ViewController: UIViewController {
             task.resume()
         }
     
+    private func getDataGameDetail(id : Int, index: Int){
+        let componentGameDetail = URLComponents(string: "https://api.rawg.io/api/games/"+String(id))!
+            
+        let request = URLRequest(url: componentGameDetail.url!)
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let response = response as? HTTPURLResponse, let data = data else { return }
+                if (response.statusCode == 200) {
+                    let detail = helper.decodeDetailGameJSON(data: data)
+                    let result: GameDetail = detail
+                    gameData[index].description = result.description ?? ""
+                } else {
+                    NSLog("Something When Wrong " + String(response.statusCode))
+                }
+        }
+        
+        task.resume()
+    }
+    
     // Insert new data into table view
-    private func insertNewData(newData: [Game]) {
+    private func insertNewData(newData: [GameModel]) {
         if (newData.count > 0) {
             gameData.append(contentsOf: newData)
             gameDataFiltered = gameData
@@ -166,6 +197,8 @@ extension ViewController: UITableViewDataSource{
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "mainViewCell", for: indexPath) as! MainTableViewCell
+        
+        cell.selectionStyle = .none
         
         if(loading){
             cell.title.text = "Loading..."
@@ -228,10 +261,15 @@ extension ViewController: UITableViewDataSource{
                     cell.platformNumber.isHidden = true
                 }
                 
-                
-                Nuke.loadImage(with: request, into: cell.mainPicture)
+                let options = ImageLoadingOptions(
+                    placeholder: UIImage(named: "placeholder"),
+                    transition: .fadeIn(duration: 0.33)
+                )
+                Nuke.loadImage(with: request, options: options, into: cell.mainPicture)
                 
                 cell.backgroundColor = helper.hexStringToUIColor(hex: "#ececec")
+                
+                getDataGameDetail(id: detailGame.id!, index: indexPath.row)
             }else{
                 cell.title.text = "Data Not Found..."
             }
@@ -258,15 +296,17 @@ extension ViewController: UITableViewDataSource{
 }
 
 extension ViewController: UITableViewDelegate{
-   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Memanggil View Controller dengan berkas NIB/XIB di dalamnya
-        let detail = DetailViewController(nibName: "DetailViewController", bundle: nil)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(!gameDataFiltered.isEmpty){
+            // Memanggil View Controller dengan berkas NIB/XIB di dalamnya
+            let detail = DetailViewController(nibName: "DetailViewController", bundle: nil)
         
-        // Mengirim data
-        detail.detailGame = gameDataFiltered[indexPath.row]
-        
-        // Push/mendorong view controller lain
-        self.navigationController?.pushViewController(detail, animated: true)
+            // Mengirim data
+            detail.detailGame = gameDataFiltered[indexPath.row]
+            
+            // Push/mendorong view controller lain
+            self.navigationController?.pushViewController(detail, animated: true)
+        }
     }
 }
 

@@ -15,9 +15,9 @@ public class Helper{
         return games
     }
 
-    public func decodeDetailGameJSON(data: Data) -> Game{
+    public func decodeDetailGameJSON(data: Data) -> GameDetail{
         let decoder = JSONDecoder()
-        let game = try! decoder.decode(Game.self, from: data)
+        let game = try! decoder.decode(GameDetail.self, from: data)
         
         return game
     }
