@@ -14,8 +14,10 @@ import AVFoundation
 class DetailViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     var detailGame: GameModel?
+    var parentController: String?
     var clip: Clip?
     var screenShot: [ShortScreenshot]?
+    @IBOutlet weak var addToFavBtn: UIButton!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var backgroundImage: UIImageView!
     @IBOutlet weak var titleGame: UILabel!
@@ -23,15 +25,14 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
     @IBOutlet weak var ratingGame: UILabel!
     @IBOutlet weak var descriptionGame: UILabel!
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionViewHeightConstraint: NSLayoutConstraint!
+    
+    private lazy var favoriteProvider: FavoriteGameProvider = { return FavoriteGameProvider() }()
     
     let inset: CGFloat = 5
     let minimumLineSpacing: CGFloat = 5
     let minimumInteritemSpacing: CGFloat = 5
     let cellsPerRow = 3
-    
-    override func viewDidLayoutSubviews(){
-        scrollView.contentSize = CGSize(width: 2000, height: 5000);
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,6 +46,10 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
         // Digunakan untuk menetapkan nilai ke beberapa view yang ada
         if let result = detailGame{
             detailGame = result
+            
+            //Check if this game is already added to fav
+            self.getFav()
+            
             //print(result.description)
             let screenWidth = UIScreen.main.bounds.size.width
             let targetSize = CGSize(width: screenWidth, height: screenWidth)
@@ -78,7 +83,12 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        screenShot = detailGame?.short_screenshots ?? [ShortScreenshot]()
+        if(screenShot?.count ?? 0 > 0){
+            return screenShot?.count ?? 0
+        }else{
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -101,6 +111,7 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
                 transition: .fadeIn(duration: 0.33)
             )
             Nuke.loadImage(with: request, options: options, into: cell.imageDetail)
+            self.collectionViewHeightConstraint.constant = self.collectionView.contentSize.height;
             return cell
         }
         
@@ -195,4 +206,55 @@ class DetailViewController: UIViewController, UICollectionViewDelegate, UICollec
             self.showDetailViewController(playerVC, sender: self)
         }
     }
+    
+    @IBAction func addToFavClick(_ sender: Any) {
+        if(self.addToFavBtn.tintColor == UIColor.systemPink){
+            //Remove Fav
+            self.removeFav()
+            self.addToFavBtn.tintColor = UIColor.white
+        }else{
+            //Add to Fav
+            self.addToFav()
+            self.addToFavBtn.tintColor = UIColor.systemPink
+        }
+        
+    }
+    
+    private func addToFav(){
+        self.favoriteProvider.addToFavorite(gameDetail: self.detailGame!) {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Successful", message: "Added to favorite", preferredStyle: .alert)
+
+                alert.addAction(UIAlertAction(title: "OK", style: .default) { (action) in
+                    
+                })
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    private func removeFav() {
+        self.favoriteProvider.removeFavorite((detailGame?.id)!) {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Successful", message: "Removed from favorite", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default) { (action) in
+                    if(self.parentController == "FavListController"){
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                })
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    private func getFav(){
+        self.favoriteProvider.getFavoriteGame((detailGame?.id)!){ (game) in
+            if(game.id != nil){
+                DispatchQueue.main.async {
+                    self.addToFavBtn.tintColor = UIColor.systemPink
+                }
+            }
+        }
+    }
+    
 }

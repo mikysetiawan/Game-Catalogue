@@ -4,4 +4,5 @@ use_frameworks!
 
 target 'Game Catalogue' do
     pod 'Nuke', '~> 9.0'
+    pod 'SwiftLint'
 end

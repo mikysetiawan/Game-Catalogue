@@ -11,4 +11,10 @@ import UIKit
 public struct Clip: Codable {
     let clip: String?
     let preview: String?
+    
+    public enum CodingKeys: String, CodingKey {
+        case clip
+        case preview
+    }
+
 }

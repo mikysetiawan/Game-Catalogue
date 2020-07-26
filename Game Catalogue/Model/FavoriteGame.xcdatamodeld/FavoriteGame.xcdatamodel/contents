@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19G73" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="ClipEntity" representedClassName="ClipEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="clip" optional="YES" attributeType="String"/>
+        <attribute name="game_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="preview" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="GameEntity" representedClassName="GameEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="background" optional="YES" attributeType="String"/>
+        <attribute name="descriptionGame" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="rating" optional="YES" attributeType="String"/>
+        <attribute name="released" optional="YES" attributeType="String"/>
+        <attribute name="slug" optional="YES" attributeType="String"/>
+        <attribute name="tba" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+    </entity>
+    <entity name="PlatformGameEntity" representedClassName="PlatformGameEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="game_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="slug" optional="YES" attributeType="String"/>
+    </entity>
+    <entity name="ShortScreenshotEntity" representedClassName="ShortScreenshotEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="game_id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="image" optional="YES" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="GameEntity" positionX="-63" positionY="-18" width="128" height="163"/>
+        <element name="PlatformGameEntity" positionX="-63" positionY="45" width="128" height="103"/>
+        <element name="ShortScreenshotEntity" positionX="-63" positionY="45" width="128" height="88"/>
+        <element name="ClipEntity" positionX="-54" positionY="54" width="128" height="88"/>
+    </elements>
+</model>

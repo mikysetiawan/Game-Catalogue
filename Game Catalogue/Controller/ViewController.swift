@@ -16,12 +16,13 @@ private let helper: Helper! = Helper()
 private var gamesData: Games!
 private var gameData: [GameModel]!
 private var gameDataFiltered: [GameModel]!
+
 var loading = true
 var searching = false
 var textQuery = ""
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var mainTableView: UITableView!
     @IBOutlet weak var loadMoreDataView: UIView!
     @IBOutlet weak var noMoreDataView: UIView!
@@ -29,6 +30,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var rightButtonNavbar: UIBarButtonItem!
     let width = UIScreen.main.bounds.size.width - 100
     lazy var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: width, height: 20))
+    private lazy var favoriteGameProvider: FavoriteGameProvider = { return FavoriteGameProvider() }()
     
     var componentGames = URLComponents(string: "https://api.rawg.io/api/games")!
     
@@ -303,6 +305,7 @@ extension ViewController: UITableViewDelegate{
         
             // Mengirim data
             detail.detailGame = gameDataFiltered[indexPath.row]
+            detail.parentController = "ViewController"
             
             // Push/mendorong view controller lain
             self.navigationController?.pushViewController(detail, animated: true)

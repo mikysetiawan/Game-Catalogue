@@ -19,7 +19,7 @@ class GameModel {
     var clip: Clip?
     var short_screenshots: [ShortScreenshot]?
     
-    init(id: Int, slug: String, name: String, released: String, tba: Bool, background: String, rating:String, parent_platforms: [ParentPlatform], clip: Clip, short_screenshots: [ShortScreenshot]) {
+    init(id: Int, slug: String, name: String, released: String, tba: Bool, background: String, rating:String, parent_platforms: [ParentPlatform]?, clip: Clip?, short_screenshots: [ShortScreenshot]?) {
         self.id = id
         self.slug = slug
         self.name = name
