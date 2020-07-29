@@ -140,7 +140,7 @@ class ViewController: UIViewController {
                         
                         let new:[Game] =  gamesData?.game ?? [Game]()
                         new.forEach { (result) in
-                            let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip!, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
+                            let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "Undefined", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
                             
                             gameDataFiltered.append(newData)
                         }
@@ -220,12 +220,20 @@ extension ViewController: UITableViewDataSource{
                 let screenWidth = UIScreen.main.bounds.size.width
                 let targetSize = CGSize(width: screenWidth, height: screenWidth)
                 
-                let request = ImageRequest(
-                    url: URL(string: detailGame.background ?? "https://i.ya-webdesign.com/images/placeholder-image-png-6.png")!,
+                var request = ImageRequest(
+                    url: URL(string: "https://i.ya-webdesign.com/images/placeholder-image-png-6.png")!,
                     processors: [
                         ImageProcessors.Resize(size: targetSize),
                     ]
                 )
+                if(detailGame.background != ""){
+                    request = ImageRequest(
+                        url: URL(string: detailGame.background ?? "https://i.ya-webdesign.com/images/placeholder-image-png-6.png")!,
+                        processors: [
+                            ImageProcessors.Resize(size: targetSize),
+                        ]
+                    )
+                }
                 
                 
                 var countTotalPlatform = 0, countPlatform = 0;

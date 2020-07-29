@@ -30,7 +30,7 @@ class FavListController: UIViewController {
     
     private func loadFavorite(){
         self.favoriteProvider.getAllFavoriteGame{ (result) in
-            dump(result)
+//            dump(result)
             if(result.count > 0){
                 DispatchQueue.main.async {
                     self.noFavView.isHidden = true
