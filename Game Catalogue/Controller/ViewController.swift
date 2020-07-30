@@ -102,7 +102,7 @@ class ViewController: UIViewController {
                     var gameFetched: [GameModel] = []
                     let new:[Game] =  gamesData?.game ?? [Game]()
                     new.forEach { (result) in
-                        let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip!, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
+                        let newData = GameModel(id: result.id ?? 0, slug: result.slug ?? "", name: result.name ?? "Undefined", released: result.released ?? "", tba: result.tba ?? false, background: result.background ?? "", rating: result.rating ?? "", parent_platforms: result.parent_platforms ?? [ParentPlatform](), clip: result.clip, short_screenshots: result.short_screenshots ?? [ShortScreenshot]())
                         
                         gameFetched.append(newData)
                     }
