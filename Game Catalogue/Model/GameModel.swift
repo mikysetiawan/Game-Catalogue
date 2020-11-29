@@ -15,11 +15,22 @@ class GameModel {
     var background: String?
     var rating: String?
     var description: String?
-    var parent_platforms: [ParentPlatform]?
+    var parentPlatforms: [ParentPlatform]?
     var clip: Clip?
-    var short_screenshots: [ShortScreenshot]?
-    
-    init(id: Int, slug: String, name: String, released: String, tba: Bool, background: String, rating:String, parent_platforms: [ParentPlatform]?, clip: Clip?, short_screenshots: [ShortScreenshot]?) {
+    var shortScreenshots: [ShortScreenshot]?
+
+    init(
+        id: Int,
+        slug: String,
+        name: String,
+        released: String,
+        tba: Bool,
+        background: String,
+        rating: String,
+        parentPlatforms: [ParentPlatform]?,
+        clip: Clip?,
+        shortScreenshots: [ShortScreenshot]?) {
+
         self.id = id
         self.slug = slug
         self.name = name
@@ -27,8 +38,8 @@ class GameModel {
         self.tba = tba
         self.background = background
         self.rating = rating
-        self.parent_platforms = parent_platforms
+        self.parentPlatforms = parentPlatforms
         self.clip = clip
-        self.short_screenshots = short_screenshots
+        self.shortScreenshots = shortScreenshots
     }
 }

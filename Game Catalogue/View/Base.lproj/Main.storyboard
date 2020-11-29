@@ -24,15 +24,26 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S0O-Bu-2bO" userLabel="Load More Data View">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                            <rect key="frame" x="142" y="0.0" width="130" height="44"/>
                                             <subviews>
                                                 <activityIndicatorView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="7jU-Nm-PF3">
-                                                    <rect key="frame" x="197" y="12" width="20" height="20"/>
+                                                    <rect key="frame" x="0.0" y="12" width="20" height="20"/>
                                                 </activityIndicatorView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5VV-9F-HF1">
+                                                    <rect key="frame" x="30" y="11" width="100" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="7jU-Nm-PF3" firstAttribute="centerX" secondItem="S0O-Bu-2bO" secondAttribute="centerX" id="2Po-5R-1eL"/>
                                                 <constraint firstItem="7jU-Nm-PF3" firstAttribute="centerY" secondItem="S0O-Bu-2bO" secondAttribute="centerY" id="7j4-f9-NeP"/>
+                                                <constraint firstAttribute="width" constant="130" id="EHe-KA-PcB"/>
+                                                <constraint firstItem="5VV-9F-HF1" firstAttribute="top" secondItem="S0O-Bu-2bO" secondAttribute="top" constant="11" id="NFW-3e-fNK"/>
+                                                <constraint firstAttribute="trailing" secondItem="5VV-9F-HF1" secondAttribute="trailing" id="Ogr-yu-ifG"/>
+                                                <constraint firstItem="7jU-Nm-PF3" firstAttribute="leading" secondItem="S0O-Bu-2bO" secondAttribute="leading" id="aJ1-Lv-His"/>
+                                                <constraint firstItem="5VV-9F-HF1" firstAttribute="leading" secondItem="7jU-Nm-PF3" secondAttribute="leading" constant="30" id="ftF-wY-UFG"/>
+                                                <constraint firstAttribute="bottom" secondItem="5VV-9F-HF1" secondAttribute="bottom" constant="12" id="gU2-sr-fmw"/>
                                             </constraints>
                                         </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b0N-1t-A3n" userLabel="No More Data View">
@@ -64,9 +75,8 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="b0N-1t-A3n" firstAttribute="centerX" secondItem="3kV-E1-u4W" secondAttribute="centerX" id="68X-rf-VzM"/>
-                                        <constraint firstItem="S0O-Bu-2bO" firstAttribute="leading" secondItem="3kV-E1-u4W" secondAttribute="leading" id="8KL-o2-Nhz"/>
                                         <constraint firstItem="b0N-1t-A3n" firstAttribute="top" secondItem="3kV-E1-u4W" secondAttribute="top" id="PQT-q1-FRy"/>
-                                        <constraint firstAttribute="trailing" secondItem="S0O-Bu-2bO" secondAttribute="trailing" id="SSp-7h-csJ"/>
+                                        <constraint firstItem="S0O-Bu-2bO" firstAttribute="centerX" secondItem="3kV-E1-u4W" secondAttribute="centerX" id="UGX-BY-gyn"/>
                                         <constraint firstItem="S0O-Bu-2bO" firstAttribute="top" secondItem="3kV-E1-u4W" secondAttribute="top" id="aSf-Yq-xO0"/>
                                         <constraint firstAttribute="bottom" secondItem="b0N-1t-A3n" secondAttribute="bottom" id="wHq-R6-KXA"/>
                                         <constraint firstAttribute="bottom" secondItem="S0O-Bu-2bO" secondAttribute="bottom" id="wP6-Is-ZlN"/>

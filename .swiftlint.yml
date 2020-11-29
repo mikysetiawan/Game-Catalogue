@@ -1,0 +1,20 @@
+included:
+  - Game Catalogue
+
+excluded:
+  - Pods
+
+variable_name:
+    max_length:
+        warning: 45
+        error: 60
+    min_length:
+        warning: 1
+
+function_body_length:
+  - 250
+  - 500
+  
+type_body_length:
+  - 250
+  - 500

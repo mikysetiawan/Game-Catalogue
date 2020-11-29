@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension PlatformGameEntity {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<PlatformGameEntity> {
@@ -19,6 +18,6 @@ extension PlatformGameEntity {
     @NSManaged public var id: Int64
     @NSManaged public var slug: String?
     @NSManaged public var name: String?
-    @NSManaged public var game_id: GameEntity?
+    @NSManaged public var gameId: GameEntity?
 
 }

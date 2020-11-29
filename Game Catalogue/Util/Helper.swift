@@ -7,22 +7,22 @@
 //
 import UIKit
 
-public class Helper{
-    public func decodeGamesJSON(data: Data) -> Games{
+public class Helper {
+    public func decodeGamesJSON(data: Data) -> Games? {
         let decoder = JSONDecoder()
-        let games = try! decoder.decode(Games.self, from: data)
-        
+        guard let games = try? decoder.decode(Games.self, from: data) else { return nil }
+
         return games
     }
 
-    public func decodeDetailGameJSON(data: Data) -> GameDetail{
+    public func decodeDetailGameJSON(data: Data) -> GameDetail? {
         let decoder = JSONDecoder()
-        let game = try! decoder.decode(GameDetail.self, from: data)
-        
+        guard let game = try? decoder.decode(GameDetail.self, from: data) else { return nil }
+
         return game
     }
-    
-    public func getIconPlatform(slug:String) -> String{
+
+    public func getIconPlatform(slug: String) -> String {
         switch slug {
         case "pc":
             return "windows"
@@ -44,19 +44,19 @@ public class Helper{
             return ""
         }
     }
-    
-    func hexStringToUIColor (hex:String) -> UIColor {
-        var cString:String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
 
-        if (cString.hasPrefix("#")) {
+    func hexStringToUIColor (hex: String) -> UIColor {
+        var cString: String = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+
+        if cString.hasPrefix("#") {
             cString.remove(at: cString.startIndex)
         }
 
-        if ((cString.count) != 6) {
+        if (cString.count) != 6 {
             return UIColor.gray
         }
 
-        var rgbValue:UInt64 = 0
+        var rgbValue: UInt64 = 0
         Scanner(string: cString).scanHexInt64(&rgbValue)
 
         return UIColor(
@@ -69,7 +69,10 @@ public class Helper{
 }
 
 extension UIImageView {
-    func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+    func downloaded(
+        from url: URL,
+        contentMode mode: UIView.ContentMode = .scaleAspectFit) {
+        // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
         contentMode = mode
         URLSession.shared.dataTask(with: url) { data, response, error in
             guard
@@ -78,13 +81,18 @@ extension UIImageView {
                 let data = data, error == nil,
                 let image = UIImage(data: data)
                 else { return }
-            DispatchQueue.main.async() { [weak self] in
+            DispatchQueue.main.async { [weak self] in
                 let width = UIScreen.main.bounds.size.width
-                self?.image = cropToBounds(image: image,width: Double(width), height: 140)
+                self?.image = cropToBounds(image: image, width: Double(width), height: 140)
             }
         }.resume()
     }
-    func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+
+    func downloaded(
+        from link: String,
+        contentMode mode: UIView.ContentMode = .scaleAspectFit) {
+        // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+
         guard let url = URL(string: link) else { return }
         downloaded(from: url, contentMode: mode)
     }
@@ -107,7 +115,7 @@ func cropToBounds(image: UIImage, width: Double, height: Double) -> UIImage {
         posX = 0
         posY = ((contextSize.height - contextSize.width) / 2)
     }
-    
+
     cgwidth = contextSize.width
     cgheight = contextSize.height
 
@@ -125,7 +133,10 @@ func cropToBounds(image: UIImage, width: Double, height: Double) -> UIImage {
 extension UIView {
 
     func roundCorners(_ corners: UIRectCorner, radius: CGFloat) {
-         let path = UIBezierPath(roundedRect: self.bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+         let path = UIBezierPath(
+            roundedRect: self.bounds,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius))
          let mask = CAShapeLayer()
          mask.path = path.cgPath
          self.layer.mask = mask
@@ -138,7 +149,9 @@ extension NSAttributedString {
         guard let data = html.data(using: String.Encoding.unicode, allowLossyConversion: false) else {
             return nil
         }
-        guard let attributedString = try? NSAttributedString(data: data, options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) else {
+        guard let attributedString = try? NSAttributedString(data: data,
+            options: [NSAttributedString.DocumentReadingOptionKey.documentType: NSAttributedString.DocumentType.html],
+            documentAttributes: nil) else {
             return nil
         }
         self.init(attributedString: attributedString)

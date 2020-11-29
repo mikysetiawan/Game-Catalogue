@@ -11,14 +11,14 @@ public struct Games: Codable {
     let next: String?
     let prev: String?
     let game: [Game]?
-    
+
        enum CodingKeys: String, CodingKey {
            case count
            case next = "next"
            case prev = "previous"
            case game = "results"
        }
-    
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         count = try container.decodeIfPresent(Int.self, forKey: .count)

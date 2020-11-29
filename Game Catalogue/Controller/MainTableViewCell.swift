@@ -18,8 +18,7 @@ class MainTableViewCell: UITableViewCell {
     @IBOutlet weak var title: UILabel!
     @IBOutlet weak var rating: UILabel!
     @IBOutlet weak var platformNumber: UILabel!
-    
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -30,13 +29,13 @@ class MainTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
         contentView.frame = contentView.frame.inset(by: UIEdgeInsets(top: 5, left: 10, bottom: 10, right: 10))
-        
+
         contentView.layer.cornerRadius = 8
     }
-    
+
 }

@@ -33,6 +33,7 @@
 		C086446A24BA2B6E0067CDA4 /* DetailViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C086446924BA2B6E0067CDA4 /* DetailViewController.xib */; };
 		C08D1E8024CC85C90079A0F9 /* FavoriteGameProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08D1E7F24CC85C90079A0F9 /* FavoriteGameProvider.swift */; };
 		C08D1E8224CC9A7D0079A0F9 /* FavListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C08D1E8124CC9A7D0079A0F9 /* FavListController.swift */; };
+		C0DAF363254D764E00EDE1C7 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = C0DAF362254D764E00EDE1C7 /* .swiftlint.yml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		C086446924BA2B6E0067CDA4 /* DetailViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DetailViewController.xib; sourceTree = "<group>"; };
 		C08D1E7F24CC85C90079A0F9 /* FavoriteGameProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteGameProvider.swift; sourceTree = "<group>"; };
 		C08D1E8124CC9A7D0079A0F9 /* FavListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavListController.swift; sourceTree = "<group>"; };
+		C0DAF362254D764E00EDE1C7 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +145,7 @@
 		C0612B6524B0FD670066F0B3 = {
 			isa = PBXGroup;
 			children = (
+				C0DAF362254D764E00EDE1C7 /* .swiftlint.yml */,
 				C0612B7024B0FD670066F0B3 /* Game Catalogue */,
 				C0612B8724B0FD690066F0B3 /* Game CatalogueTests */,
 				C0612B9224B0FD690066F0B3 /* Game CatalogueUITests */,
@@ -255,6 +258,7 @@
 				C0612B6B24B0FD670066F0B3 /* Frameworks */,
 				C0612B6C24B0FD670066F0B3 /* Resources */,
 				9F974841C9CB191A82C31A62 /* [CP] Embed Pods Frameworks */,
+				C038B3EA254D605B0036B35A /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -352,6 +356,7 @@
 				C0612B7E24B0FD690066F0B3 /* LaunchScreen.storyboard in Resources */,
 				C0612B7B24B0FD690066F0B3 /* Assets.xcassets in Resources */,
 				C086446A24BA2B6E0067CDA4 /* DetailViewController.xib in Resources */,
+				C0DAF363254D764E00EDE1C7 /* .swiftlint.yml in Resources */,
 				C040167224B1C5DB0012AC81 /* MainTableViewCell.xib in Resources */,
 				C0612B7924B0FD670066F0B3 /* Main.storyboard in Resources */,
 				C01AA4AB24BB0747008A3801 /* ImageDetailItemCell.xib in Resources */,
@@ -413,6 +418,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Game Catalogue/Pods-Game Catalogue-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		C038B3EA254D605B0036B35A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which \"${PODS_ROOT}/SwiftLint/swiftlint\" >/dev/null; then \n    \"${PODS_ROOT}/SwiftLint/swiftlint\" \nelse \n    echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\" \nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

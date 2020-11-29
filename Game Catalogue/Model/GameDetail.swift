@@ -12,6 +12,6 @@ public struct GameDetail: Codable {
     let id: Int?
     let slug: String?
     let name: String?
-    let name_original: String?
+    let nameOriginal: String?
     let description: String?
 }
